@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Helper</title>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            color: #333;
+        }
+        header {
+            background: #2196f3;
+            color: #fff;
+            padding: 1rem 0;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        header h1 {
+            margin: 0;
+        }
+        main {
+            padding: 2rem;
+            display: flex;
+            flex-direction: row; /* Tampilan horizontal */
+            justify-content: center;
+            gap: 2rem;
+        }
+        section {
+            background: #fff;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        section h2 {
+            margin-bottom: 1rem;
+            color: #2196f3;
+        }
+        .timer {
+            font-size: 3rem;
+            font-weight: bold;
+            text-align: center;
+            margin: 1rem 0;
+            color: #333;
+        }
+        .controls button {
+            margin: 0.5rem;
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: #fff;
+        }
+        .controls button:first-child {
+            background: #2196f3;
+        }
+        .controls button:last-child {
+            background: #f44336;
+        }
+        .todo-input {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .todo-input input {
+            flex: 1;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .todo-input button {
+            padding: 0.5rem 1rem;
+            background: #2196f3;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #task-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 1rem;
+        }
+        #task-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f9f9f9;
+            padding: 0.5rem 1rem;
+            margin: 0.5rem 0;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        #task-list li span {
+            flex: 1; /* Membuat teks tugas tetap rapat */
+        }
+        #task-list li.completed {
+            text-decoration: line-through;
+            background: #e0e0e0;
+            color: #666;
+        }
+        #task-list li button {
+            margin-left: 0.3rem;
+            padding: 0.3rem 0.8rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: #fff;
+        }
+        #task-list li .complete-btn {
+            background: #4caf50;
+        }
+        #task-list li .remove-btn {
+            background: #f44336;
+        }
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background: #e3f2fd;
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>ZONA PRODUKTIFITAS</h1>
+        <p>Pomodoro Timer dan To-Do List untuk mendukung produktivitas belajar Anda!</p>
+    </header>
+    <main>
+        <section id="pomodoro">
+            <h2>Pomodoro Timer</h2>
+            <div class="timer">
+                <span id="minutes">25</span>:<span id="seconds">00</span>
+            </div>
+            <div class="controls">
+                <button id="start">Mulai</button>
+                <button id="reset">Atur Ulang</button>
+            </div>
+            <div class="spotify">
+                <h3>Spotify Playlist</h3>
+                <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/62utPIMzz4GTiqD8OWIXOq?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            </div>
+        </section>
+        <section id="todo">
+            <h2>To-Do List</h2>
+            <div class="todo-input">
+                <input type="text" id="task-input" placeholder="Tambahkan tugas baru...">
+                <button id="add-task">Tambah</button>
+            </div>
+            <ul id="task-list"></ul>
+        </section>
+    </main>
+    <footer>
+        <p>© 2024 Learning Helper. Dibuat dengan semangat belajar!</p>
+    </footer>
+    <script>
+        // Pomodoro Timer
+        let timer;
+        let isRunning = false;
+        const startButton = document.getElementById("start");
+        const resetButton = document.getElementById("reset");
+        const minutesDisplay = document.getElementById("minutes");
+        const secondsDisplay = document.getElementById("seconds");
+
+        startButton.addEventListener("click", () => {
+            if (!isRunning) {
+                isRunning = true;
+                let time = parseInt(minutesDisplay.textContent) * 60;
+
+                timer = setInterval(() => {
+                    const minutes = Math.floor(time / 60);
+                    const seconds = time % 60;
+                    minutesDisplay.textContent = minutes.toString().padStart(2, "0");
+                    secondsDisplay.textContent = seconds.toString().padStart(2, "0");
+                    time--;
+
+                    if (time < 0) {
+                        clearInterval(timer);
+                        isRunning = false;
+                        alert("Waktu selesai!");
+                    }
+                }, 1000);
+            }
+        });
+
+        resetButton.addEventListener("click", () => {
+            clearInterval(timer);
+            isRunning = false;
+            minutesDisplay.textContent = "25";
+            secondsDisplay.textContent = "00";
+        });
+
+        // To-Do List
+        const taskInput = document.getElementById("task-input");
+        const addTaskButton = document.getElementById("add-task");
+        const taskList = document.getElementById("task-list");
+
+        addTaskButton.addEventListener("click", () => {
+            const taskText = taskInput.value.trim();
+            if (taskText) {
+                const li = document.createElement("li");
+
+                const taskSpan = document.createElement("span");
+                taskSpan.textContent = taskText;
+
+                const completeButton = document.createElement("button");
+                completeButton.textContent = "Selesai";
+                completeButton.className = "complete-btn";
+                completeButton.addEventListener("click", () => {
+                    li.classList.toggle("completed");
+                });
+
+                const removeButton = document.createElement("button");
+                removeButton.textContent = "Hapus";
+                removeButton.className = "remove-btn";
+                removeButton.addEventListener("click", () => li.remove());
+
+                li.appendChild(taskSpan);
+                li.appendChild(completeButton);
+                li.appendChild(removeButton);
+                taskList.appendChild(li);
+
+                taskInput.value = "";
+            }
+        });
+    </script>
+</body>
+</html>
